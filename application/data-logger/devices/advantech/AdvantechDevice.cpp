@@ -11,7 +11,7 @@ AdvantechDevice::AdvantechDevice(std::shared_ptr<app::ILogger> logger)
     , m_startChannel(0)
     , m_channelCount(1)
     , m_samplesPerChannel(25000)
-    , m_samplingRate(250000.0)
+    , m_samplingRate(500000.0)
     , m_logger(logger)
 {
     m_aiCtrl = Automation::BDaq::BufferedAiCtrl::Create();
