@@ -12,7 +12,7 @@ app::CommandLineOptions::CommandLineOptions() :
     m_device_description(),
     m_output_file_path(),
     m_start_channel(0),
-    m_end_channel(15),
+    m_end_channel(31),
     m_sampling_rate(),
     m_samples_per_channel()
 {
@@ -29,11 +29,11 @@ void app::CommandLineOptions::setup()
         ("help", "Show help");
 
     specific_options.add_options()
-        ("device", po::value<std::string>(&m_device_description)->default_value("DemoDevice,BID#0"), "Device description (e.g., 'PCI-1716,BID#0' or 'DemoDevice,BID#0')")
-        ("start-channel", po::value<long>(&m_start_channel)->default_value(0), "Start channel (0-15)")
-        ("end-channel", po::value<long>(&m_end_channel)->default_value(15), "End channel (0-15)")
-        ("rate", po::value<double>(&m_sampling_rate)->default_value(250000.0), "Sampling rate in Hz (max 250000)")
-        ("samples-per-channel", po::value<long>(&m_samples_per_channel)->default_value(25000), "Number of samples per channel in the buffer")
+        ("device", po::value<std::string>(&m_device_description)->default_value("DemoDevice,BID#0"), "Device description (e.g., 'PCI-1715,BID#0' or 'DemoDevice,BID#0')")
+        ("start-channel", po::value<long>(&m_start_channel)->default_value(0), "Start channel (0-31)")
+        ("end-channel", po::value<long>(&m_end_channel)->default_value(31), "End channel (0-31)")
+        ("rate", po::value<double>(&m_sampling_rate)->default_value(500000.0), "Sampling rate in Hz (max 500000)")
+        ("samples-per-channel", po::value<long>(&m_samples_per_channel)->default_value(10240), "Number of samples per channel in the buffer")
         ("output", po::value<std::string>(&m_output_file_path)->default_value("daq_data.bin"), "Output binary file name")
         ("input-mode", po::value<std::string>(&m_input_mode)->default_value("unipolar"), "Input mode: bipolar or unipolar")
         ("input-range", po::value<std::string>(&m_input_range)->default_value("10V"), "Input range: 10V, 5V, 2.5V, 1.25V");
@@ -69,8 +69,8 @@ app::CommandLineOptions::state app::CommandLineOptions::parse(int argc, char* ar
 
         if (variable_map.count("start-channel") || variable_map.count("end-channel"))
         {
-            if (m_start_channel < 0 || m_start_channel > 15 || m_end_channel < 0 || m_end_channel > 15) {
-                m_error_message = "Error: Channels must be between 0 and 15.";
+            if (m_start_channel < 0 || m_start_channel > 31 || m_end_channel < 0 || m_end_channel > 31) {
+                m_error_message = "Error: Channels must be between 0 and 31.";
                 return state::failure;
             }
             if (m_start_channel > m_end_channel) {
@@ -81,8 +81,8 @@ app::CommandLineOptions::state app::CommandLineOptions::parse(int argc, char* ar
 
         if (variable_map.count("rate"))
         {
-            if (m_sampling_rate <= 0.0 || m_sampling_rate > 250000.0) {
-                m_error_message = "Error: Sampling rate must be between 1 and 250000 Hz.";
+            if (m_sampling_rate <= 0.0 || m_sampling_rate > 500000.0) {
+                m_error_message = "Error: Sampling rate must be between 1 and 500000 Hz.";
                 return state::failure;
             }
         }
