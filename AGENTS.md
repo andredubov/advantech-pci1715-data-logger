@@ -1,10 +1,10 @@
 # AI Agent Instructions
 
-This file helps AI coding agents understand the PCI-1716 data acquisition project and be immediately productive.
+This file helps AI coding agents understand the PCI-1715 data acquisition project and be immediately productive.
 
 ## Project Overview
 
-C++ application suite for high-speed data acquisition (250 kHz) using Advantech PCI-1716 analog input card.
+C++ application suite for high-speed data acquisition (500 kHz) using Advantech PCI-1715 analog input card.
 
 > **Note:** `README.md` does not currently exist in the workspace. If you need full documentation, consider creating it from the AGENTS.md content.
 
@@ -29,7 +29,7 @@ cmake --build . --config Release
 
 **Direct (data-logger):**
 ```bash
-data-logger.exe --device PCI-1716,BID#0 --start-channel 0 --end-channel 7 --rate 100000 --input-mode unipolar --input-range 10V
+data-logger.exe --device PCI-1715,BID#0 --start-channel 0 --end-channel 31 --rate 100000 --input-mode unipolar --input-range 10V
 ```
 
 See README for all command-line arguments.
@@ -73,7 +73,7 @@ Targets Windows due to Advantech DAQNavi SDK. No cross-platform builds.
 
 4. **Static linking**: MSVC uses `/MT` or `/MTd` flags. If you encounter runtime DLL errors, verify the correct static libraries are linked.
 
-5. **Device description**: The device string format is `PCI-1716,BID#0` (bus ID 0). Adjust the BID number if you have multiple cards.
+5. **Device description**: The device string format is `PCI-1715,BID#0` (bus ID 0). Adjust the BID number if you have multiple cards.
 
 ## VS Code Build Tools
 
