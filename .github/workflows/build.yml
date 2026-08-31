@@ -1,0 +1,142 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-x64:
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        arch: [x64]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v7
+
+    - name: Setup vcpkg cache
+      uses: actions/cache@v6.1.0
+      with:
+        path: |
+          ~/.cache/vcpkg
+          ${{ github.workspace }}/vcpkg_installed
+        key: ${{ runner.os }}-vcpkg-x64-${{ hashFiles('vcpkg.json') || 'static-v1' }} # или фиксированный ключ
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-x64-
+
+    - name: Install Boost via vcpkg
+      run: |
+        vcpkg install boost-system boost-program-options boost-filesystem --triplet x64-windows-static --x-install-root="${{ github.workspace }}/vcpkg_installed"
+  
+    - name: Configure CMake
+      run: >
+        cmake -A x64 -S . -B ./build 
+        -DCMAKE_GENERATOR_TOOLSET=v143 
+        -D_WIN32_WINNT=0x0601 
+        -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        -DVCPKG_TARGET_TRIPLET=x64-windows-static
+        -DCMAKE_PREFIX_PATH="${{ github.workspace }}/vcpkg_installed/x64-windows-static"
+
+    - name: Build Release
+      run: cmake --build ./build --config Release --target ALL_BUILD -j 6
+
+    - name: Rename executables (x64)
+      run: |
+        Rename-Item -Path "build/application/data-logger/Release/data-logger.exe" -NewName "data-logger-windows-x64.exe"
+        Rename-Item -Path "build/application/data-converter/Release/data-converter.exe" -NewName "data-converter-windows-x64.exe"
+      shell: pwsh
+
+    - name: Upload artifacts (x64)
+      uses: actions/upload-artifact@v7
+      with:
+        name: pci-1716-binaries-x64
+        path: |
+          build/application/data-logger/Release/data-logger-windows-x64.exe
+          build/application/data-converter/Release/data-converter-windows-x64.exe
+
+  build-x86:
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        arch: [Win32]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v7
+
+    - name: Setup vcpkg cache
+      uses: actions/cache@v6.1.0
+      with:
+        path: |
+          ~/.cache/vcpkg
+          ${{ github.workspace }}/vcpkg_installed
+        key: ${{ runner.os }}-vcpkg-x86-${{ hashFiles('vcpkg.json') || 'static-v1' }}
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-x86-
+
+    - name: Install Boost via vcpkg
+      run: |
+        vcpkg install boost-system boost-program-options boost-filesystem --triplet x86-windows-static --x-install-root="${{ github.workspace }}/vcpkg_installed"
+
+    - name: Configure CMake
+      run: >
+        cmake -A Win32 -S . -B ./build 
+        -DCMAKE_GENERATOR_TOOLSET=v143 
+        -D_WIN32_WINNT=0x0601 
+        -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        -DVCPKG_TARGET_TRIPLET=x86-windows-static
+        -DCMAKE_PREFIX_PATH="${{ github.workspace }}/vcpkg_installed/x86-windows-static"
+
+    - name: Build Release
+      run: cmake --build ./build --config Release --target ALL_BUILD -j 6
+
+    - name: Rename executables (x86)
+      run: |
+        Rename-Item -Path "build/application/data-logger/Release/data-logger.exe" -NewName "data-logger-windows-i386.exe"
+        Rename-Item -Path "build/application/data-converter/Release/data-converter.exe" -NewName "data-converter-windows-i386.exe"
+      shell: pwsh
+
+    - name: Upload artifacts (x86)
+      uses: actions/upload-artifact@v7
+      with:
+        name: pci-1716-binaries-x86
+        path: |
+          build/application/data-logger/Release/data-logger-windows-i386.exe
+          build/application/data-converter/Release/data-converter-windows-i386.exe
+
+  release:
+    needs: [build-x64, build-x86]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+    - name: Download artifacts (x64)
+      uses: actions/download-artifact@v8
+      with:
+        name: pci-1716-binaries-x64
+        path: binaries/x64
+
+    - name: Download artifacts (x86)
+      uses: actions/download-artifact@v8
+      with:
+        name: pci-1716-binaries-x86
+        path: binaries/x86
+
+    - name: Flatten artifact directories
+      run: |
+        find binaries -type f -name "*.exe" -exec mv -v {} binaries/ \;
+        rm -rf binaries/x64 binaries/x86 binaries/xp
+      shell: bash
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v3
+      with:
+        files: |
+          binaries/*-windows-x64.exe
+          binaries/*-windows-i386.exe
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
