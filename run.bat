@@ -45,7 +45,7 @@ echo [--rate]          Sampling rate in Hz (max 500000)
 echo [--samples]       Samples per channel
 echo [--output]        Output binary file name
 echo [--input-mode]    Input mode: bipolar or unipolar
-echo [--input-range]   Input range: 10V, 5V, 2.5V, 1.25V
+echo [--input-range]   Input range: 10V, 5V, 2.5V
 echo.
 echo Press Enter to use default values, or type your value.
 echo.

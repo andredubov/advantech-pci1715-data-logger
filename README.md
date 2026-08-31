@@ -84,7 +84,7 @@ data-logger.exe --device PCI-1715,BID#0 --start-channel 0 --end-channel 31 --rat
 | `--samples-per-channel` | Buffer size per channel | `10240` |
 | `--output` | Output binary file name | `daq_data.bin` |
 | `--input-mode` | `bipolar` or `unipolar` | `unipolar` |
-| `--input-range` | `10V`, `5V`, `2.5V`, `1.25V` | `10V` |
+| `--input-range` | `10V`, `5V`, `2.5V` | `10V` |
 
 ### Data Converter
 
