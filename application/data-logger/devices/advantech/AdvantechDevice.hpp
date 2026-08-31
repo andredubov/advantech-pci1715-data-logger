@@ -18,7 +18,7 @@
 namespace app {
 
 /**
- * @brief Implementation of IDataAcquisitionDevice for Advantech PCI-1716
+ * @brief Implementation of IDataAcquisitionDevice for Advantech PCI-1715
  */
 class AdvantechDevice : public IDataAcquisitionDevice {
 public:

@@ -6,7 +6,7 @@
  * Архитектура:
  * - ConsoleLogger    — логирование в консоль
  * - BinaryFileWriter — запись в бинарный файл
- * - AdvantechDevice  — управление железом PCI-1716
+ * - AdvantechDevice  — управление железом PCI-1715
  * - DataProcessingEngine — обработка данных (очередь + поток записи)
  * - AcquisitionManager   — оркестрация всего процесса
  */
