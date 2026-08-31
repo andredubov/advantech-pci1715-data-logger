@@ -38,9 +38,9 @@ echo ========================================
 echo   data-logger arguments
 echo ========================================
 echo.
-echo [--device]        Device description (e.g., PCI-1716,BID#0 or DemoDevice,BID#0)
-echo [--start-channel] First channel (0-15)
-echo [--end-channel]   Last channel (0-15)
+echo [--device]        Device description (e.g., PCI-1715,BID#0 or DemoDevice,BID#0)
+echo [--start-channel] First channel (0-31)
+echo [--end-channel]   Last channel (0-31)
 echo [--rate]          Sampling rate in Hz (max 500000)
 echo [--samples]       Samples per channel
 echo [--output]        Output binary file name
@@ -59,8 +59,8 @@ set /p START_CH="Start channel [0]: "
 if "!START_CH!"=="" set START_CH=0
 
 set END_CH=
-set /p END_CH="End channel [15]: "
-if "!END_CH!"=="" set END_CH=15
+set /p END_CH="End channel [31]: "
+if "!END_CH!"=="" set END_CH=31
 
 set RATE=
 set /p RATE="Sampling rate [500000]: "
