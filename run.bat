@@ -41,7 +41,7 @@ echo.
 echo [--device]        Device description (e.g., PCI-1716,BID#0 or DemoDevice,BID#0)
 echo [--start-channel] First channel (0-15)
 echo [--end-channel]   Last channel (0-15)
-echo [--rate]          Sampling rate in Hz (max 250000)
+echo [--rate]          Sampling rate in Hz (max 500000)
 echo [--samples]       Samples per channel
 echo [--output]        Output binary file name
 echo [--input-mode]    Input mode: bipolar or unipolar
@@ -63,12 +63,12 @@ set /p END_CH="End channel [15]: "
 if "!END_CH!"=="" set END_CH=15
 
 set RATE=
-set /p RATE="Sampling rate [250000]: "
-if "!RATE!"=="" set RATE=250000
+set /p RATE="Sampling rate [500000]: "
+if "!RATE!"=="" set RATE=500000
 
 set SAMPLES=
-set /p SAMPLES="Samples per channel [25000]: "
-if "!SAMPLES!"=="" set SAMPLES=25000
+set /p SAMPLES="Samples per channel [10240]: "
+if "!SAMPLES!"=="" set SAMPLES=10240
 
 set OUTPUT=
 set /p OUTPUT="Output file [daq_data.bin]: "
